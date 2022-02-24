@@ -11,7 +11,6 @@ typedef struct _color {
 
 // Ce header contiendra l'ensemble des fonctions utilisables (publiques) de la librairie
 
-// TODO: add transparency to colors using the 
 #define WHITE      (Color){ 255, 255, 255, 255 }        // White
 #define BLACK      (Color){ 0, 0, 0, 255 }              // Black
 #define LIGHTGRAY  (Color){ 200, 200, 200, 255 }        // Light Gray

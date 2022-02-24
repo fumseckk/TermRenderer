@@ -8,10 +8,11 @@
 #include "../headers/renderer.h"
 
 
-static Color **pixels;
+// static Color **pixels;
 static struct winsize volatile WINSIZE;
 static struct termios term_original;
 static struct termios term_settings;
+
 
 // --------- LOCAL HEADERS ----------
 void get_winsize();
@@ -24,7 +25,7 @@ void _draw_point_no_color(unsigned int x, unsigned int y);
 
 void update_winsize() {
     ioctl(0, TIOCGWINSZ, &WINSIZE);
-    WINSIZE.ws_col *= 2; 
+    // WINSIZE.ws_col *= 2; 
 }
 
 void sigwinch_handler(int sig) {
