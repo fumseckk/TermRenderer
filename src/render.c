@@ -25,6 +25,7 @@ void _draw_point_no_color(unsigned int x, unsigned int y);
 
 void update_winsize() {
     ioctl(0, TIOCGWINSZ, &WINSIZE);
+    // TODO: uncomment quand les pixels seront carré
     // WINSIZE.ws_col *= 2; 
 }
 
@@ -98,7 +99,7 @@ void end_drawing() {
 
 
 void draw_point(unsigned int x, unsigned int y, Color color) {
-    CHG_COLOR_TO(color.r, color.g, color.b);
+    CHG_COLOR_TO(color);
     MOVE_CUR_TO(x, y);
     PRINT_PIX();
 
@@ -106,8 +107,58 @@ void draw_point(unsigned int x, unsigned int y, Color color) {
 
 
 void _draw_point_no_color(unsigned int x, unsigned int y) {
+    // TODO: enlever le /2 quand les pixels seront carrés
     MOVE_CUR_TO(x, y);
     PRINT_PIX();
+}
+
+
+void draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, Color color) {
+    CHG_COLOR_TO(color);
+
+    int dx, dy, sx, sy, err, e2;
+
+    dx =  abs (x1 - x0);
+    dy = -abs (y1 - y0);
+    sy = y0 < y1 ? 1 : -1; 
+    sx = x0 < x1 ? 1 : -1;
+    
+    err = dx + dy; // error value e_xy
+
+    for (;;){  // boucle infinie
+        _draw_point_no_color(x0, y0);
+        if (x0 == x1 && y0 == y1) break;
+
+        e2 = 2 * err;
+
+        if (e2 >= dy)  { 
+            err += dy;
+            x0 += sx; // e_xy + e_x > 0
+        }
+        if (e2 <= dx) {
+            err += dx;
+            y0 += sy; // e_xy + e_y < 0
+        }
+    }
+}
+
+
+void draw_rect_boundary(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color) {
+ CHG_COLOR_TO(color)
+    for (int posx = x; posx < x + width;    posx++) _draw_point_no_color(posx, y);
+    for (int posx = x; posx < x + width;    posx++) _draw_point_no_color(posx, y + height);
+    for (int posy = y; posy < y + height;   posy++) _draw_point_no_color(x, posy);
+    for (int posy = y; posy < y + height+1; posy++) _draw_point_no_color(x + width, posy);
+}
+
+
+void draw_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color) {
+    CHG_COLOR_TO(color)
+    for (int posx = x; posx < x + width; posx++) {
+        for (int posy = y; posy < y + height; posy++) {
+            _draw_point_no_color(posx, posy);
+        }
+    }
 }
 
 // --------- LIB FUNCTIONS ----------

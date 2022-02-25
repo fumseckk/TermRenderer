@@ -12,8 +12,7 @@
 #define CSI "\x1b["
 
 
-
-#define CHG_COLOR_TO(r, g, b) printf(CSI "38;2;%d;%d;%dm", r, g, b);
+#define CHG_COLOR_TO(__c_struct) printf(CSI "38;2;%d;%d;%dm", __c_struct.r, __c_struct.g, __c_struct.b);
 #define PRINT_PIX() printf("█");
 
 
@@ -31,14 +30,14 @@
 #define CLEAR_SCREEN() printf(CSI "H" CSI "J");
 
 #define MOVE_CUR_TO(__x, __y) printf(CSI "%d;%dH", ++__y, ++__x);
-#define MOVE_CUR_HOME()   printf(CSI "H");
-#define MOVE_CUR_UP(__x)    printf(CSI "%dA", __x);
-#define MOVE_CUR_DOWN(__x)  printf(CSI "%dB", __x);
-#define MOVE_CUR_RIGHT(__x) printf(CSI "%dC", __x);
-#define MOVE_CUR_LEFT(__x)  printf(CSI "%dD", __x);
+#define MOVE_CUR_HOME()       printf(CSI "H");
+#define MOVE_CUR_UP(__x)      printf(CSI "%dA", __x);
+#define MOVE_CUR_DOWN(__x)    printf(CSI "%dB", __x);
+#define MOVE_CUR_RIGHT(__x)   printf(CSI "%dC", __x);
+#define MOVE_CUR_LEFT(__x)    printf(CSI "%dD", __x);
 
-#define HIDE_CUR()        printf(CSI "?25l"); 
-#define SHOW_CUR()        printf(CSI "?25h");
+#define HIDE_CUR() printf(CSI "?25l"); 
+#define SHOW_CUR() printf(CSI "?25h");
 
 #define USE_ALT_BUFF()  printf(CSI "?1049h");
 #define USE_MAIN_BUFF() printf(CSI "?1049l");

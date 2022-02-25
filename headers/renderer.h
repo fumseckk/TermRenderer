@@ -10,6 +10,8 @@ typedef struct _color {
 } Color;
 
 // Ce header contiendra l'ensemble des fonctions utilisables (publiques) de la librairie
+// Les coordonnées sont 0-indexed
+
 
 #define WHITE      (Color){ 255, 255, 255, 255 }        // White
 #define BLACK      (Color){ 0, 0, 0, 255 }              // Black
@@ -61,11 +63,15 @@ unsigned int get_screen_height();
 // Dessine un point aux coordonnées (x, y) de couleur `color`
 void draw_point(unsigned int x, unsigned int y, Color color);
 
+// Dessine les cotés d'un rectangle partant (point en haut à droit du rect) de (x, y), de longueur `width`, de hauteur `height` et de couleur `color`
+void draw_rect_boundary(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color);
+
+// Dessine un rectangle partant (point en haut à droit du rect) de (x, y), de longueur `width`, de hauteur `height` et de couleur `color`
+void draw_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color);
 
 void draw_line(); // Dessine une ligne de points
-void draw_rect(); // t'as compris
 void draw_circle();
 void draw_ellipse();
-void draw_ellipse();
+void set_background(); // Change tous les pixels de la couleur actuelle du background (default: noir) en une autre couleur. 
 
 #endif
