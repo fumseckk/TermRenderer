@@ -9,22 +9,21 @@ OBJS := $(patsubst src/%.c,src/%.o,$(SRC))
 OUTTESTS=$(patsubst tests/%.c,bin/%,$(TESTS))
 
 OUTLIB=bin/static/librenderer.a
-OUTTESTS=bin/
 
-
-all: tests pong
+all: test pong
 
 lib: $(OUTLIB)
 
-tests: $(TESTS) $(OUTLIB) $(OBJS) $(LIBHDR) $(HDR)
-		$(CC) tests/main.c -o bin/tests $(CFLAGS) -L./bin/static/ -lrenderer
+test: $(TESTS) $(OUTLIB) $(OBJS) $(LIBHDR) $(HDR)
+		$(CC) tests/main.c -o bin/test $(CFLAGS) -L./bin/static/ -lrenderer
 
 pong: $(TESTS) $(OUTLIB) $(OBJS) $(LIBHDR) $(HDR)
 		$(CC) tests/pong.c -o bin/pong $(CFLAGS) -L./bin/static/ -lrenderer
 
 $(OUTLIB): $(OBJS) $(LIBHDR) $(HDR)
+		mkdir -p bin/static
 		ar -crs $@ $(OBJS)
 
 
 clean:
-	rm -f $(OUTLIB) $(OUTTESTS) $(OBJS)
+	rm -rf $(OUTLIB) $(OBJS) bin/*

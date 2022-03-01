@@ -10,43 +10,39 @@
 
 int main() {
     init_window();
-    
     begin_drawing(); 
-    fill_background(BLACK);
     end_drawing();
 
     int width =  get_screen_width();
     int height = get_screen_height();
     
-    // draw_ellipse(40, 50, 30, 40, PURPLE);
-    // draw_ellipse_boundary(39, 49, 31, 12, GOLD);
     draw_circle(width/2+30, height/2+30, 40, BLUE);
 
-
-    // draw_circle(30, 30, 30, GOLD);
-
-
-
+    set_bg_to_current();
+    
     Color color = GOLD;
     int rad = 0;
-    for (int i = 0; i<width; i++) {
+    for (int i = 1; i<width; i++) {
             color.r = MIN(color.r+1, 255);
             color.g = MAX(color.g-1, 0);
             color.b = MIN(color.b+1, 255);
             rad++;
-            // draw_ellipse(i, i, rad, rad, GOLD);
             draw_circle_boundary(i, i, rad, color);
             end_drawing();
             usleep(15000);
-            draw_circle_boundary(i, i, rad, BLACK);
+            remove_circle_boundary(i, i, rad);
     }
-
 
     float angle;
     int r = 30;
     for (int i = 0; i<=360; i++) {
         begin_drawing();
-        draw_rect(width/2 - r, height/2 - r, 2*r+1, 2*r+1, BLACK);
+        for (int x = width/2-r; x < width/2-r + 2*r+1; x++) {
+            for (int y = height/2-r; y < height/2-r + 2*r+1; y++) {
+                remove_point(x, y);
+            }
+        }
+        // draw_rect(width/2 - r, height/2 - r, 2*r+1, 2*r+1, BLACK);
 
         width = get_screen_width();
         height = get_screen_height();
@@ -57,15 +53,8 @@ int main() {
 
         usleep(5000);
     }
-
-
-
-    // draw_rect(10, 10, 10, 10, GOLD);
-    // draw_rect_boundary(10, 10, 10, 10, PURPLE);
-
     end_drawing();
 
     wait_and_leave_window();
-
     return 0;
 }

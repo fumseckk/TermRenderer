@@ -9,6 +9,7 @@
 
 typedef struct _buffer {
     Color** pixels;
+    Color** bg;
     bool** modified;
     unsigned short cols;
     unsigned short rows;
@@ -27,10 +28,12 @@ void _draw_point_no_color(unsigned int x, unsigned int y);
 
 // buffer.c
 void alloc_buff();
-void realloc_buff();
+void resize_buff();
 void free_buff();
-void push_pix_buff(unsigned int x, unsigned int y, Color color);
-void draw_pix_buff();
+void pix_to_buff(unsigned int x, unsigned int y, Color color);
+void pix_to_bg(unsigned int x, unsigned int y, Color color);
+void remove_pix(unsigned int x, unsigned int y);
+void draw_buff();
 void flush_buff();
 
 

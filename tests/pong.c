@@ -5,8 +5,8 @@
 #include "../headers/renderer.h"
 
 #define BALL_RADIUS 4
-#define PAD_WIDTH  10
-#define PAD_HEIGHT 40
+#define PAD_WIDTH  5
+#define PAD_HEIGHT 25
 #define HALF_PAD_WIDTH  PAD_WIDTH  / 2
 #define HALF_PAD_HEIGHT PAD_HEIGHT / 2
 #define WIDTH get_screen_width()
@@ -58,11 +58,19 @@ void ball_init(int right) {
 
 
 void init() {
-    fill_background(BLACK);
+    begin_drawing();
+    draw_line(WIDTH/2, 0, WIDTH/2, HEIGHT , WHITE);
+    draw_line(PAD_WIDTH, 0, PAD_WIDTH, HEIGHT , WHITE);
+    draw_line(WIDTH - PAD_WIDTH, 0, WIDTH - PAD_WIDTH, HEIGHT , WHITE);
+    draw_circle(WIDTH/2, HEIGHT/2, 10, WHITE);
+    set_bg_to_current();
+    end_drawing();
 
-
-    paddle1.posx = HALF_PAD_WIDTH - 1;
+    paddle1.posx = HALF_PAD_WIDTH;
     paddle1.posy = HEIGHT/2;
+    paddle2.posx = WIDTH - HALF_PAD_WIDTH;
+    paddle2.posy = HEIGHT/2;
+
     score.l = 0;
     score.r = 0;
 
@@ -74,20 +82,12 @@ void draw() {
     begin_drawing();
 
     // Erase old stuff
-    draw_circle(ball.posx, ball.posy, BALL_RADIUS, BLACK);
-    draw_rect(paddle1.posx - HALF_PAD_WIDTH, paddle1.posy - HALF_PAD_HEIGHT, 
-              PAD_WIDTH, PAD_HEIGHT, GREEN);
-    draw_rect(paddle2.posx - HALF_PAD_WIDTH, paddle2.posy - HALF_PAD_HEIGHT, 
-              PAD_WIDTH, PAD_HEIGHT, GREEN);
+    remove_circle(ball.posx, ball.posy, BALL_RADIUS);
+    remove_rect(paddle1.posx - HALF_PAD_WIDTH, paddle1.posy - HALF_PAD_HEIGHT, 
+              PAD_WIDTH, PAD_HEIGHT);
+    remove_rect(paddle2.posx - HALF_PAD_WIDTH, paddle2.posy - HALF_PAD_HEIGHT, 
+              PAD_WIDTH, PAD_HEIGHT);
 
-    // Draw terrain
-    draw_line(WIDTH/2, 0, WIDTH/2, HEIGHT , WHITE);
-    draw_line(PAD_WIDTH, 0, PAD_WIDTH, HEIGHT , WHITE);
-    draw_line(WIDTH - PAD_WIDTH, 0, WIDTH - PAD_WIDTH, HEIGHT , WHITE);
-    draw_circle(WIDTH/2, HEIGHT/2, 10, WHITE);
-
-
-    
 
 
     // Update the paddles' y pos
@@ -134,7 +134,7 @@ void draw() {
     }
     else if ((int) ball.posx <= BALL_RADIUS + PAD_WIDTH) {
         score.r++;
-        draw_circle(ball.posx, ball.posy, BALL_RADIUS, BLACK);
+        remove_circle(ball.posx, ball.posy, BALL_RADIUS);
         ball_init(1);
     }
 
@@ -148,7 +148,7 @@ void draw() {
     }
     else if ((int) ball.posx >= WIDTH - BALL_RADIUS - PAD_WIDTH) {
         score.l++;
-        draw_circle(ball.posx, ball.posy, BALL_RADIUS, BLACK);
+        remove_circle(ball.posx, ball.posy, BALL_RADIUS);
         ball_init(0);
     }
 
