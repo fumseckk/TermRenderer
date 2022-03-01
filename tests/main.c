@@ -23,7 +23,9 @@ int main() {
     draw_circle(width/2+30, height/2+30, 40, BLUE);
 
 
-    draw_circle(30, 30, 30, GOLD);
+    // draw_circle(30, 30, 30, GOLD);
+
+
 
     Color color = GOLD;
     int rad = 0;
@@ -33,11 +35,10 @@ int main() {
             color.b = MIN(color.b+1, 255);
             rad++;
             // draw_ellipse(i, i, rad, rad, GOLD);
-            draw_circle(i, i, rad, color);
-
+            draw_circle_boundary(i, i, rad, color);
             end_drawing();
             usleep(15000);
-            draw_circle(i, i, rad, BLACK);
+            draw_circle_boundary(i, i, rad, BLACK);
     }
 
 
@@ -45,16 +46,16 @@ int main() {
     int r = 30;
     for (int i = 0; i<=360; i++) {
         begin_drawing();
+        draw_rect(width/2 - r, height/2 - r, 2*r+1, 2*r+1, BLACK);
 
         width = get_screen_width();
         height = get_screen_height();
 
         angle = (float) i * PI / 180.0;
-        draw_line(width/2, height/2, width/2 + (int) round(r * cos(angle)), height/2 + (int) round(r * sin(angle)), BLUE);
+        draw_line(width/2, height/2, width/2 + (int) round(r * cos(angle)), height/2 + (int) round(r * sin(angle)), GREEN);
         end_drawing();
 
         usleep(5000);
-        draw_rect(width/2 - r, height/2 - r, 2*r+1, 2*r+1, BLACK);
     }
 
 

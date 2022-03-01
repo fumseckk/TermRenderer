@@ -239,29 +239,36 @@ void draw_ellipse_boundary(int x0, int y0, int width, int height, Color color) {
 }
 
 
-void draw_circle(unsigned int cx, unsigned int cy, unsigned int radius, Color color) {
-    if (!radius) return;
-    int error = -radius;
+void draw_circle(int x0, int y0, int radius, Color color) {
     int x = radius;
     int y = 0;
+    int xChange = 1 - (radius << 1);
+    int yChange = 0;
+    int radiusError = 0;
 
-    while (x > y) {
-        for (int i = cx - x; i <= cx + x; i++) draw_point(i, cy + y, color);
-        for (int i = cx - x; i <= cx + x; i++) draw_point(i, cy - y, color);
-        for (int i = cx - y; i <= cx + y; i++) draw_point(i, cy + x, color);
-        for (int i = cx - y; i <= cx + y; i++) draw_point(i, cy - x, color);
+    while (x >= y)
+    {
+        for (int i = x0 - x; i <= x0 + x; i++)
+        {
+            draw_point(i, y0 + y, color);
+            draw_point(i, y0 - y, color);
+        }
+        for (int i = x0 - y; i <= x0 + y; i++)
+        {
+            draw_point(i, y0 + x, color);
+            draw_point(i, y0 - x, color);
+        }
 
-        error += y;
-        ++y;
-        error += y;
-        if (error >= 0) {
-            --x;
-            error -= x;
-            error -= x;
+        y++;
+        radiusError += yChange;
+        yChange += 2;
+        if (((radiusError << 1) + xChange) > 0)
+        {
+            x--;
+            radiusError += xChange;
+            xChange += 2;
         }
     }
-    for (int i = cx - x; i <= cx + x; i++) draw_point(i, cy + y, color);
-    for (int i = cx - x; i <= cx + x; i++) draw_point(i, cy - y, color);
 }
 
 

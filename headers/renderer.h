@@ -87,9 +87,10 @@ void draw_ellipse(int x0, int y0, int width, int height, Color color);
 // Dessine le périmètre d'une ellipse rentrant dans un rectangle de coordonnées (x0, x1, y0, x1).
 void draw_ellipse_boundary(int x0, int y0, int width, int height, Color color);
 
-void draw_circle(unsigned int cx, unsigned int cy, unsigned int radius, Color color);
 
 void draw_circle_boundary(unsigned int cx, unsigned int cy, unsigned int radius, Color color);
+
+void draw_circle(int x0, int y0, int radius, Color color);
 
 // Change tous les pixels de la couleur actuelle du background (default: noir) en une autre couleur.  
 // TODO faire sa vraie implémentation
