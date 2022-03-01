@@ -5,8 +5,8 @@
 #include "../headers/renderer.h"
 
 #define BALL_RADIUS 4
-#define PAD_WIDTH  4
-#define PAD_HEIGHT 20
+#define PAD_WIDTH  10
+#define PAD_HEIGHT 40
 #define HALF_PAD_WIDTH  PAD_WIDTH  / 2
 #define HALF_PAD_HEIGHT PAD_HEIGHT / 2
 #define WIDTH get_screen_width()
@@ -134,6 +134,7 @@ void draw() {
     }
     else if ((int) ball.posx <= BALL_RADIUS + PAD_WIDTH) {
         score.r++;
+        draw_circle(ball.posx, ball.posy, BALL_RADIUS, BLACK);
         ball_init(1);
     }
 
@@ -147,6 +148,7 @@ void draw() {
     }
     else if ((int) ball.posx >= WIDTH - BALL_RADIUS - PAD_WIDTH) {
         score.l++;
+        draw_circle(ball.posx, ball.posy, BALL_RADIUS, BLACK);
         ball_init(0);
     }
 

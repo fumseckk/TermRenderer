@@ -239,7 +239,7 @@ void draw_ellipse_boundary(int x0, int y0, int width, int height, Color color) {
 }
 
 
-void draw_circle(int x0, int y0, int radius, Color color) {
+void draw_circle(int cx, int cy, int radius, Color color) {
     int x = radius;
     int y = 0;
     int xChange = 1 - (radius << 1);
@@ -248,15 +248,15 @@ void draw_circle(int x0, int y0, int radius, Color color) {
 
     while (x >= y)
     {
-        for (int i = x0 - x; i <= x0 + x; i++)
+        for (int i = cx - x; i <= cx + x; i++)
         {
-            draw_point(i, y0 + y, color);
-            draw_point(i, y0 - y, color);
+            draw_point(i, cy + y, color);
+            draw_point(i, cy - y, color);
         }
-        for (int i = x0 - y; i <= x0 + y; i++)
+        for (int i = cx - y; i <= cx + y; i++)
         {
-            draw_point(i, y0 + x, color);
-            draw_point(i, y0 - x, color);
+            draw_point(i, cy + x, color);
+            draw_point(i, cy - x, color);
         }
 
         y++;
