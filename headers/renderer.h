@@ -93,7 +93,7 @@ void draw_circle_boundary(unsigned int cx, unsigned int cy, unsigned int radius,
 
 // Change tous les pixels de la couleur actuelle du background (default: noir) en une autre couleur.  
 // TODO faire sa vraie implémentation
-void fill_backg²round(Color color);
+void fill_background(Color color);
 
 // void draw_circle();
 // void draw_ellipse();

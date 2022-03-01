@@ -246,10 +246,10 @@ void draw_circle(unsigned int cx, unsigned int cy, unsigned int radius, Color co
     int y = 0;
 
     while (x > y) {
-        for (int i = cx - x; i < cx + x; i++) draw_point(i, cy + y, color);
-        for (int i = cx - x; i < cx + x; i++) draw_point(i, cy - y, color);
-        for (int i = cx - y; i < cx + y; i++) draw_point(i, cy + x, color);
-        for (int i = cx - y; i < cx + y; i++) draw_point(i, cy - x, color);
+        for (int i = cx - x; i <= cx + x; i++) draw_point(i, cy + y, color);
+        for (int i = cx - x; i <= cx + x; i++) draw_point(i, cy - y, color);
+        for (int i = cx - y; i <= cx + y; i++) draw_point(i, cy + x, color);
+        for (int i = cx - y; i <= cx + y; i++) draw_point(i, cy - x, color);
 
         error += y;
         ++y;
@@ -260,8 +260,8 @@ void draw_circle(unsigned int cx, unsigned int cy, unsigned int radius, Color co
             error -= x;
         }
     }
-    for (int i = cx - x; i < cx + x; i++) draw_point(i, cy + y, color);
-    for (int i = cx - x; i < cx + x; i++) draw_point(i, cy - y, color);
+    for (int i = cx - x; i <= cx + x; i++) draw_point(i, cy + y, color);
+    for (int i = cx - x; i <= cx + x; i++) draw_point(i, cy - y, color);
 }
 
 
