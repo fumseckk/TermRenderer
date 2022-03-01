@@ -2,6 +2,9 @@
 #define RENDERER_H
 
 
+// Ce header contient l'ensemble des fonctions utilisables (publiques) de la librairie
+
+
 typedef struct _color {
     unsigned int r;
     unsigned int g;
@@ -9,10 +12,12 @@ typedef struct _color {
     unsigned int a;
 } Color;
 
-// Ce header contiendra l'ensemble des fonctions utilisables (publiques) de la librairie
 // Les coordonnées sont 0-indexed
 
+#define PI 3.1415926535
 
+
+#define BLANK      (Color){ 0, 0, 0, 0 }                // Blank
 #define WHITE      (Color){ 255, 255, 255, 255 }        // White
 #define BLACK      (Color){ 0, 0, 0, 255 }              // Black
 #define LIGHTGRAY  (Color){ 200, 200, 200, 255 }        // Light Gray
@@ -42,6 +47,7 @@ typedef struct _color {
 // Fonction à appeler au début du programme, sert à initialiser les valeurs de la république
 void init_window();
 
+
 // Fonction à appeler en fin de programme, sert à rétablir ces dernières comme au temps de Pétain
 void leave_window();
 
@@ -69,9 +75,27 @@ void draw_rect_boundary(unsigned int x, unsigned int y, unsigned int width, unsi
 // Dessine un rectangle partant (point en haut à droit du rect) de (x, y), de longueur `width`, de hauteur `height` et de couleur `color`
 void draw_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color);
 
-void draw_line(); // Dessine une ligne de points
-void draw_circle();
-void draw_ellipse();
-void set_background(); // Change tous les pixels de la couleur actuelle du background (default: noir) en une autre couleur. 
+// Vide entièrement un rectangle de pixels
+void empty_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+
+// Dessine une ligne allant du point (x0, y0) au point (x1, y1) de la couleur `color`
+void draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, Color color);
+
+// Dessine une ellipse rentrant dans un rectangle de coordonnées (x0, x1, y0, x1).
+void draw_ellipse(int x0, int y0, int width, int height, Color color);
+
+// Dessine le périmètre d'une ellipse rentrant dans un rectangle de coordonnées (x0, x1, y0, x1).
+void draw_ellipse_boundary(int x0, int y0, int width, int height, Color color);
+
+void draw_circle(unsigned int cx, unsigned int cy, unsigned int radius, Color color);
+
+void draw_circle_boundary(unsigned int cx, unsigned int cy, unsigned int radius, Color color);
+
+// Change tous les pixels de la couleur actuelle du background (default: noir) en une autre couleur.  
+// TODO faire sa vraie implémentation
+void fill_backg²round(Color color);
+
+// void draw_circle();
+// void draw_ellipse();
 
 #endif

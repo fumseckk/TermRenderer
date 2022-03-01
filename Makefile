@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall
+CFLAGS=-Wall -lm -O3 -DNDEBUG
 
 SRC := $(wildcard src/*.c)
 HDR := $(wildcard src/*.h)
@@ -16,10 +16,10 @@ all: tests
 lib: $(OUTLIB)
 
 tests: $(TESTS) $(OUTLIB) $(OBJS) $(LIBHDR) $(HDR)
-		$(CC) $< -o $(OUTTESTS) -L./bin/static/ -lrenderer
+		$(CC) $< -o $(OUTTESTS) $(CFLAGS) -L./bin/static/  -lrenderer
 
 $(OUTLIB): $(OBJS) $(LIBHDR) $(HDR)
-		ar -crs $@ $<
+		ar -crs $@ $(OBJS)
 
 
 clean:
