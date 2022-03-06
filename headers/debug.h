@@ -19,10 +19,12 @@
 })
 
 
-#define WARNING(str...) ({      \
-    _LOG_HEADER("WARNING");     \
-    _EPRINTF(str);              \
-    _EPRINTF("\n");             \
+#define WARNING(cond, str...) ({            \
+    if (cond) {                             \
+        _LOG_HEADER("WARNING");             \
+        _EPRINTF(str);                      \
+        _EPRINTF("\n");                     \
+    }                                       \
 })
 
 

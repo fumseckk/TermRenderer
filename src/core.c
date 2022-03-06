@@ -1,3 +1,4 @@
+#include <alloca.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
@@ -5,19 +6,27 @@
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "core.h"
 
 #include "macros.h"
-#include "screen_buffer.h"
+#include "datatypes/Buffer2D.h"
 #include "../headers/renderer.h"
 #include "../headers/debug.h"
+#include "../headers/utils.h"
 
 #include "servers/main_server.h"
 
 
+const bool FALSE = false;
+const bool TRUE  = true;
+
 // --------- Variables ---------
 
+static Buffer2D pixels;
+static Buffer2D background;
+static Buffer2D modified;
 
 static bool initialized = false;
 static struct termios term_original;
@@ -31,6 +40,62 @@ static void (*loop)(double);
 #ifndef NDEBUG
 static FILE* debout;
 #endif  // #ifndef NDEBUG
+
+
+// --------- Private Functions ---------
+
+
+void _alloc_buff() {
+    int width = get_screen_width();
+    int height = get_screen_height();
+
+    pixels     = create_buffer2d(width, height, sizeof(Color));
+    background = create_buffer2d(width, height, sizeof(Color));
+    modified   = create_buffer2d(width, height / 2, sizeof(bool));
+    buffer2d_fill(modified, &TRUE);
+}
+
+
+void _resize_buff() {
+    resize_buffer2d(pixels, get_screen_width(), get_screen_height());
+    resize_buffer2d(background, get_screen_width(), get_screen_height());
+    resize_buffer2d(modified, get_screen_width() / 2, get_screen_height());
+}
+
+
+void _free_buff() {
+    free_buffer2d(pixels);
+    free_buffer2d(background);
+    free_buffer2d(modified);
+}
+
+
+void _draw_buff() {
+    Color color_up;
+    Color color_down;
+
+    for (int y = 0; y < pixels->height; y += 2) {
+        for (int x = 0; x < pixels->width; x++) {
+            if (*(bool*)buffer2d_get(modified, x, y / 2)) {
+                MOVE_CUR_TO(x, y);
+                color_up = *(Color*)buffer2d_get(pixels, x, y);
+                color_down = *(Color*)buffer2d_get(pixels, x, y+1);
+
+                if (color_eq(color_up, color_down)) { CHG_BG_COLOR_TO(color_up); printf(" "); }
+                // else if (color_down.a == 0) { CHG_BG_COLOR_TO(BLACK);     CHG_FG_COLOR_TO(color_up); printf("▀"); }
+                // else if (color_up.a == 0) { CHG_BG_COLOR_TO(BLACK);     CHG_FG_COLOR_TO(color_down); printf("▄"); }
+                else { CHG_BG_COLOR_TO(color_up); CHG_FG_COLOR_TO(color_down); printf("▄"); }
+
+                buffer2d_set(modified, x, y / 2, &FALSE);
+            }
+        }
+    }
+}
+
+
+bool _check_pixel_out_of_bound(int x, int y) {
+    return (x < 0 || y < 0 || x >= pixels->width || y >= pixels->height);
+}
 
 
 // --------- Internal Functions ---------
@@ -103,9 +168,7 @@ void _leave_window() {
 }
 
 
-void _begin_drawing() {
-    // nothing to do lol
-}
+void _begin_drawing() { /* nothing to do lol */ }
 
 
 void _end_drawing() {
@@ -160,11 +223,46 @@ void wait_and_leave_window() {
 
 void init(void (loop_function)(double)) {
     loop = loop_function;
-    _init_window();
     _init_debug();
+    _init_window();
 }
 
 
 void start() {
     _main_server_loop(); // start main loop
+}
+
+
+void _set_point(int x, int y, Color c) {
+    if (_check_pixel_out_of_bound(x, y)) return;
+    if (!color_eq(*(Color*)buffer2d_get(pixels, x, y), c)) {
+        buffer2d_set(pixels, x, y, &c);
+        buffer2d_set(modified, x, y / 2, &TRUE);
+    }
+}
+
+
+Color _get_point(int x, int y) {
+    if (_check_pixel_out_of_bound(x, y)) return BLACK;
+    return *(Color*)buffer2d_get(pixels, x, y);
+}
+
+
+void _remove_point(int x, int y) {
+    if (_check_pixel_out_of_bound(x, y)) return;
+    _set_point(x, y, *(Color*)buffer2d_get(background, x, y));
+}
+
+
+void _set_bg_point(int x, int y, Color c) {
+    if (_check_pixel_out_of_bound(x, y)) return;
+    if (!color_eq(*(Color*)buffer2d_get(background, x, y), c)) {
+        buffer2d_set(background, x, y, &c);
+    }
+}
+
+
+Color _get_bg_point(int x, int y) {
+    if (_check_pixel_out_of_bound(x, y)) return BLACK;
+    return *(Color*)buffer2d_get(background, x, y);   
 }

@@ -4,14 +4,14 @@
 #include <string.h>
 
 #include "macros.h"
-#include "screen_buffer.h"
+#include "core.h"
 #include "../headers/renderer.h"
 
 
 // DRAWING SHAPES
 
 void draw_point(int x, int y, Color color) {
-    _pix_to_buff(x, y, color);
+    _set_point(x, y, color);
 }
 
 
@@ -214,12 +214,10 @@ void draw_circle_boundary(int cx, int cy, int radius, Color color) {
 }
 
 
-
-
 // REMOVING SHAPES
 
 void remove_point(int x, int y) {
-    _remove_pix(x, y);
+    _remove_point(x, y);
 }
 
 
@@ -430,7 +428,7 @@ void set_bg_to_current() {
     int height = get_screen_height();
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
-            _pix_to_bg(x, y, _get_pix(x, y));
+            _set_bg_point(x, y, _get_point(x, y));
         }
     }
 }
@@ -441,8 +439,7 @@ void set_bg_to_color(Color color) {
     int height = get_screen_height();
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
-            _pix_to_bg(x, y, color);
-            _pix_to_buff(x, y, color);
+            _set_bg_point(x, y, color);
         }
     }   
 }

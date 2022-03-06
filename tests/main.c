@@ -60,11 +60,7 @@ void loop(double delta) {
         break;
     case 1:
         set_framerate(7);
-        for (int x = width/2-r; x < width/2-r + 2*r+1; x++) {
-            for (int y = height/2-r; y < height/2-r + 2*r+1; y++) {
-                remove_point(x, y);
-            }
-        }
+        draw_rect(width/2-r, height/2-r, 2*r+1, 2*r+1, BLACK);
 
         float angle = (float) i * PI / 180.0;
 

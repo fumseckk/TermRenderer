@@ -61,11 +61,8 @@ void init(void loop_function(double));
 void start();
 
 
-// void init_window();
-// void leave_window();
+//TODO: add leave_window
 void wait_and_leave_window();
-// void begin_drawing();
-// void end_drawing();
 
 int get_screen_width();
 int get_screen_height();
@@ -102,8 +99,5 @@ void set_bg_to_current();
 
 void set_framerate(double framerate);
 double get_current_framerate();
-
-// void draw_circle();
-// void draw_ellipse();
 
 #endif

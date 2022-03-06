@@ -6,9 +6,13 @@
 #include "../../headers/debug.h"
 
 
+// ---------- Variables ----------
+
 static double sec_per_frame = 1. / 20.;
 static double current_framerate = 20.;
 
+
+// ---------- Internal functions ----------
 
 unsigned long _get_utime() {
     struct timeval tv;
