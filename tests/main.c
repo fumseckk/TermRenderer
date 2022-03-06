@@ -10,15 +10,13 @@
 
 int main() {
     init_window();
-    begin_drawing(); 
-    end_drawing();
 
     int width =  get_screen_width();
     int height = get_screen_height();
-    
+
     draw_circle(width/2+30, height/2+30, 40, BLUE);
 
-    set_bg_to_current();
+    // set_bg_to_current();
     
     Color color = GOLD;
     int rad = 0;

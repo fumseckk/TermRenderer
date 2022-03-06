@@ -19,41 +19,25 @@ void alloc_buff() {
     buff->cols = WINSIZE.ws_col;
     buff->rows = WINSIZE.ws_row;
     
-    buff->pixels =   (Color**) malloc(buff->cols * sizeof(Color*));
-    buff->bg =       (Color**) malloc(buff->cols * sizeof(Color*));
-    buff->modified = (bool**)  malloc(buff->cols * sizeof(bool*));
+    buff->pixels =   (Color*) malloc(buff->cols * buff->rows * sizeof(Color));
+    buff->bg =       (Color*) malloc(buff->cols * buff->rows * sizeof(Color));
+    buff->modified = (bool*)  malloc(buff->cols * buff->rows * sizeof(bool));
 
-    for (int i = 0; i < buff->cols; i++) {
-        buff->pixels[i] =   (Color*) calloc(buff->rows,  sizeof(Color));
-        buff->bg[i] =       (Color*) calloc(buff->rows,  sizeof(Color));
-        buff->modified[i] = (bool*)  malloc(buff->rows * sizeof(bool));
-    }
-    for (int i = 0; i<buff->cols; i++)
-        for (int j = 0; j<buff->rows; j++)
-            buff->modified[i][j] = true;
+    memset(buff->modified, 1, buff->cols * buff->rows * sizeof(bool));
 }
 
 
 void resize_buff() {
-    // buff->cols = WINSIZE.ws_col;
-    // buff->rows = WINSIZE.ws_row;
+    buff->cols = WINSIZE.ws_col;
+    buff->rows = WINSIZE.ws_row;
 
-    // buff->pixels =  (Color**) realloc(buff->pixels,   buff->cols * sizeof(Color*));
-    // buff->modified = (bool**) realloc(buff->modified, buff->cols * sizeof(bool*));
-    
-    // for (int i = 0; i < buff->cols; i++) {
-    //     buff->pixels[i] =  (Color*) realloc(buff->pixels[i],   buff->rows * sizeof(Color));
-    //     buff->modified[i] = (bool*) realloc(buff->modified[i], buff->rows * sizeof(bool));
-    // }
+    buff->pixels =   (Color*) realloc(buff->pixels,   buff->cols * buff->rows * sizeof(Color));
+    buff->bg =       (Color*) realloc(buff->bg,       buff->cols * buff->rows * sizeof(Color));
+    buff->modified = (bool*)  realloc(buff->modified, buff->cols * buff->rows * sizeof(bool));
 }
 
 
 void free_buff() {
-    for (int i = 0; i < buff->cols; i++) {
-        free(buff->pixels[i]);
-        free(buff->bg[i]);
-        free(buff->modified[i]);
-    }
     free(buff->pixels);
     free(buff->bg);
     free(buff->modified);
@@ -68,27 +52,27 @@ bool _check_pix_in_bound(unsigned int x, unsigned int y) {
 
 void pix_to_buff(unsigned int x, unsigned int y, Color color) {
     if (!_check_pix_in_bound(x, y)) return;
-    buff->pixels[x][y] = color;
-    buff->modified[x][y] = true;
+    buff->pixels[x * buff->rows + y] = color;
+    buff->modified[x * buff->rows + y] = true;
 }
 
 
 void pix_to_bg(unsigned int x, unsigned int y, Color color) {
     if (!_check_pix_in_bound(x, y)) return;
-    buff->bg[x][y] = color;
+    buff->bg[x * buff->rows + y] = color;
 }
 
 
 void remove_pix(unsigned int x, unsigned int y) {
     if (!_check_pix_in_bound(x, y)) return;
-    buff->pixels[x][y] = buff->bg[x][y];
-    buff->modified[x][y] = true;
+    buff->pixels[x * buff->rows + y] = buff->bg[x * buff->rows + y];
+    buff->modified[x * buff->rows + y] = true;
 }
 
 
 Color _get_pix(unsigned int x, unsigned int y) {
     if (!_check_pix_in_bound(x, y)) return ( (Color){ 0, 0, 0 } );
-    else return buff->pixels[x][y];
+    else return buff->pixels[x * buff->rows + y];
 }
 
 
@@ -98,7 +82,7 @@ bool _color_eq(Color color1, Color color2) {
 
 
 bool _check_pix_modified(unsigned int x, unsigned int y) {
-    return (_check_pix_in_bound(x, y) && buff->modified[x][y]);
+    return (_check_pix_in_bound(x, y) && buff->modified[x * buff->rows + y]);
 }
 
 
@@ -108,18 +92,18 @@ void draw_buff() {
 
     for (int y = 0; y < buff->rows; y += 2) {
         for (int x = 0; x < buff->cols; x++) {
-            if (buff->modified[x][y] || buff->modified[x][y+1]) {
+            if (buff->modified[x * buff->rows + y] || buff->modified[x * buff->rows + y+1]) {
                 MOVE_CUR_TO(x, y);
-                color1 = buff->pixels[x][y];
-                color2 = buff->pixels[x][y+1];
+                color1 = buff->pixels[x * buff->rows + y];
+                color2 = buff->pixels[x * buff->rows + y+1];
 
                 if (_color_eq(color1, color2)) { CHG_BG_COLOR_TO(color1); printf(" "); }
                 // else if (color2.a == 0) { CHG_BG_COLOR_TO(BLACK);     CHG_FG_COLOR_TO(color1); printf("▀"); }
                 // else if (color1.a == 0) { CHG_BG_COLOR_TO(BLACK);     CHG_FG_COLOR_TO(color2); printf("▄"); }
                 else { CHG_BG_COLOR_TO(color1); CHG_FG_COLOR_TO(color2); printf("▄"); }
 
-                buff->modified[x][y] =  false;
-                buff->modified[x][y+1] = false;
+                buff->modified[x * buff->rows + y] =  false;
+                buff->modified[x * buff->rows + y+1] = false;
             }
         }
 

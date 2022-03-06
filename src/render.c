@@ -10,6 +10,7 @@
 
 
 extern Buffer* buff;
+bool initialized = false;
 extern struct winsize volatile WINSIZE;
 static struct termios term_original;
 static struct termios term_settings;
@@ -22,14 +23,18 @@ static struct termios term_settings;
 
 
 void update_winsize() {
-    int old_cols = WINSIZE.ws_col;
-    int old_rows = WINSIZE.ws_row;
-
-    ioctl(0, TIOCGWINSZ, &WINSIZE);
-    WINSIZE.ws_row *= 2;
-
-    if (old_cols != WINSIZE.ws_col || old_rows != WINSIZE.ws_row) {
-        resize_buff();
+    if (!initialized) {
+        ioctl(0, TIOCGWINSZ, &WINSIZE);
+        WINSIZE.ws_row *= 2;
+    }
+    else {
+        int old_cols = WINSIZE.ws_col;
+        int old_rows = WINSIZE.ws_row;
+        ioctl(0, TIOCGWINSZ, &WINSIZE);
+        WINSIZE.ws_row *= 2;
+        if (old_cols != WINSIZE.ws_col || old_rows != WINSIZE.ws_row) {
+            resize_buff();
+        }
     }
 }
 
@@ -46,11 +51,12 @@ void sigint_handler(int Sig) {
 // --------- LIB FUNCTIONS ----------
 
 unsigned int get_screen_width() {
+    if (!initialized) update_winsize();
     return (unsigned int) WINSIZE.ws_col;
 }
 
-
 unsigned int get_screen_height() {
+    if (!initialized) update_winsize();
     return (unsigned int) WINSIZE.ws_row;
 }
 
@@ -70,6 +76,7 @@ void init_window() {
     WINSIZE.ws_row *= 2;
 
     alloc_buff();
+    initialized = true;
 
     // Signal handlers for resize and Ctrl+C 
     FATAL_ERROR(signal(SIGWINCH, sigwinch_handler) == SIG_ERR || signal(SIGINT, sigint_handler) == SIG_ERR,
@@ -88,6 +95,7 @@ void leave_window() {
     FATAL_ERROR(tcsetattr(STDIN, 0, &term_settings) < 0, "[CNSR] Could not set config for stdin");
     free_buff();
     fflush(stdout);
+    initialized = false;
     CLEAR_SCREEN();
     USE_MAIN_BUFF();
     SHOW_CUR();
@@ -130,7 +138,7 @@ void set_bg_to_current() {
     int height = get_screen_height();
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
-            pix_to_bg(x, y, buff->pixels[x][y]);
+            pix_to_bg(x, y, buff->pixels[x * buff->rows + y]);
         }
     }
 }

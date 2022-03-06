@@ -5,12 +5,16 @@
 #include "../headers/renderer.h"
 
 #define BALL_RADIUS 4
-#define PAD_WIDTH  5
+#define PAD_WIDTH  10
 #define PAD_HEIGHT 25
 #define HALF_PAD_WIDTH  PAD_WIDTH  / 2
 #define HALF_PAD_HEIGHT PAD_HEIGHT / 2
 #define WIDTH get_screen_width()
 #define HEIGHT get_screen_height()
+
+
+// TODO: Manage input & ability to print scores. Maybe on exit?
+
 
 typedef struct _ball {
     int posx;
@@ -60,7 +64,7 @@ void ball_init(int right) {
 void init() {
     begin_drawing();
     draw_line(WIDTH/2, 0, WIDTH/2, HEIGHT , WHITE);
-    draw_line(PAD_WIDTH, 0, PAD_WIDTH, HEIGHT , WHITE);
+    draw_line(PAD_WIDTH - 1, 0, PAD_WIDTH - 1, HEIGHT , WHITE);
     draw_line(WIDTH - PAD_WIDTH, 0, WIDTH - PAD_WIDTH, HEIGHT , WHITE);
     draw_circle(WIDTH/2, HEIGHT/2, 10, WHITE);
     set_bg_to_current();
@@ -87,7 +91,6 @@ void draw() {
               PAD_WIDTH, PAD_HEIGHT);
     remove_rect(paddle2.posx - HALF_PAD_WIDTH, paddle2.posy - HALF_PAD_HEIGHT, 
               PAD_WIDTH, PAD_HEIGHT);
-
 
 
     // Update the paddles' y pos
@@ -120,7 +123,7 @@ void draw() {
     // Ball collision check on top and bottom walls
     if ((int) ball.posy <= BALL_RADIUS)
         ball.vely = -ball.vely;
-    else if ((int) ball.posy >= HEIGHT - BALL_RADIUS)
+    else if ((int) ball.posy >= HEIGHT + 1 - BALL_RADIUS)
         ball.vely = -ball.vely;
     
     // Ball collision check on gutters or paddles
@@ -146,7 +149,7 @@ void draw() {
         ball.velx *= 1.1;
         ball.velx *= 1.1;
     }
-    else if ((int) ball.posx >= WIDTH - BALL_RADIUS - PAD_WIDTH) {
+    else if ((int) ball.posx >= WIDTH + 1 - BALL_RADIUS - PAD_WIDTH) {
         score.l++;
         remove_circle(ball.posx, ball.posy, BALL_RADIUS);
         ball_init(0);

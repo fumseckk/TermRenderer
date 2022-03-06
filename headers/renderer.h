@@ -17,6 +17,8 @@
 // Permet: ctrl+z, remove sans faire pleins de fonctions, ...
 
 
+
+
 typedef struct _color {
     unsigned int r;
     unsigned int g;

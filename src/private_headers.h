@@ -8,13 +8,14 @@
 
 
 typedef struct _buffer {
-    Color** pixels;
-    Color** bg;
-    bool** modified;
+    Color* pixels;
+    Color* bg;
+    bool* modified;
     unsigned short cols;
     unsigned short rows;
 } Buffer;
 
+extern bool initialized;
 
 extern struct winsize volatile WINSIZE;
 extern Buffer* buff;
