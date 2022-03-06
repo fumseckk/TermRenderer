@@ -48,32 +48,32 @@ void _free_buff() {
 }
 
 
-bool _check_pix_in_bound(unsigned int x, unsigned int y) {
+bool _check_pix_in_bound(int x, int y) {
     return (x < buff->width && y < buff->height);
 }
 
 
-void _pix_to_buff(unsigned int x, unsigned int y, Color color) {
+void _pix_to_buff(int x, int y, Color color) {
     if (!_check_pix_in_bound(x, y)) return;
     buff->pixels[x * buff->height + y] = color;
     buff->modified[x * buff->height + y] = true;
 }
 
 
-void _pix_to_bg(unsigned int x, unsigned int y, Color color) {
+void _pix_to_bg(int x, int y, Color color) {
     if (!_check_pix_in_bound(x, y)) return;
     buff->bg[x * buff->height + y] = color;
 }
 
 
-void _remove_pix(unsigned int x, unsigned int y) {
+void _remove_pix(int x, int y) {
     if (!_check_pix_in_bound(x, y)) return;
     buff->pixels[x * buff->height + y] = buff->bg[x * buff->height + y];
     buff->modified[x * buff->height + y] = true;
 }
 
 
-Color _get_pix(unsigned int x, unsigned int y) {
+Color _get_pix(int x, int y) {
     if (!_check_pix_in_bound(x, y)) return ( (Color){ 0, 0, 0 } );
     else return buff->pixels[x * buff->height + y];
 }
@@ -84,7 +84,7 @@ bool _color_eq(Color color1, Color color2) {
 }
 
 
-bool _check_pix_modified(unsigned int x, unsigned int y) {
+bool _check_pix_modified(int x, int y) {
     return (_check_pix_in_bound(x, y) && buff->modified[x * buff->height + y]);
 }
 
@@ -111,30 +111,4 @@ void _draw_buff() {
         }
 
     }
-}
-
-
-// --------- Library functions ---------
-
-
-void set_bg_to_current() {
-    int width = get_screen_width();
-    int height = get_screen_height();
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            _pix_to_bg(x, y, buff->pixels[x * buff->height + y]);
-        }
-    }
-}
-
-
-void set_bg_to_color(Color color) {
-    int width = get_screen_width();
-    int height = get_screen_height();
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            _pix_to_bg(x, y, color);
-            _pix_to_buff(x, y, color);
-        }
-    }   
 }

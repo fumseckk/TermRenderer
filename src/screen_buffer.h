@@ -11,17 +11,18 @@ typedef struct _buffer {
     Color* pixels;
     Color* bg;
     bool* modified;
-    unsigned short width;
-    unsigned short height;
+    short width;
+    short height;
 } Buffer;
 
 
 void _alloc_buff();
 void _resize_buff();
 void _free_buff();
-void _pix_to_buff(unsigned int x, unsigned int y, Color color);
-void _pix_to_bg(unsigned int x, unsigned int y, Color color);
-void _remove_pix(unsigned int x, unsigned int y);
+Color _get_pix(int x, int y);
+void _pix_to_buff(int x, int y, Color color);
+void _pix_to_bg(int x, int y, Color color);
+void _remove_pix(int x, int y);
 void _draw_buff();
 void _flush_buff();
 
