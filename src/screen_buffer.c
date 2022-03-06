@@ -100,12 +100,17 @@ void _draw_buff() {
                 color1 = buff->pixels[x * buff->height + y];
                 color2 = buff->pixels[x * buff->height + y+1];
 
-                if (_color_eq(color1, color2)) { CHG_BG_COLOR_TO(color1); printf(" "); }
-                // else if (color2.a == 0) { CHG_BG_COLOR_TO(BLACK);     CHG_FG_COLOR_TO(color1); printf("▀"); }
-                // else if (color1.a == 0) { CHG_BG_COLOR_TO(BLACK);     CHG_FG_COLOR_TO(color2); printf("▄"); }
-                else { CHG_BG_COLOR_TO(color1); CHG_FG_COLOR_TO(color2); printf("▄"); }
+                if (_color_eq(color1, color2)) { 
+                    CHG_BG_COLOR_TO(color1);
+                    printf(" ");
+                }
+                else {
+                    CHG_BG_COLOR_TO(color1);
+                    CHG_FG_COLOR_TO(color2);
+                    printf("▄");
+                }
 
-                buff->modified[x * buff->height + y] =  false;
+                buff->modified[x * buff->height + y]   = false;
                 buff->modified[x * buff->height + y+1] = false;
             }
         }
