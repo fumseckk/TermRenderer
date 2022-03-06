@@ -112,3 +112,29 @@ void _draw_buff() {
 
     }
 }
+
+
+// --------- Library functions ---------
+
+
+void set_bg_to_current() {
+    int width = get_screen_width();
+    int height = get_screen_height();
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            _pix_to_bg(x, y, buff->pixels[x * buff->height + y]);
+        }
+    }
+}
+
+
+void set_bg_to_color(Color color) {
+    int width = get_screen_width();
+    int height = get_screen_height();
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            _pix_to_bg(x, y, color);
+            _pix_to_buff(x, y, color);
+        }
+    }   
+}

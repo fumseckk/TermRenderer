@@ -140,32 +140,6 @@ void _end_debug() {
 // --------- Library functions ---------
 
 
-void set_bg_to_color(Color color) {
-    int width = get_screen_width();
-    int height = get_screen_height();
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            pix_to_bg(x, y, color);
-            pix_to_buff(x, y, color);
-        }
-    }
-    
-}
-
-
-/* TOFIX: change place of the function */
-
-// void set_bg_to_current() {
-//     int width = get_screen_width();
-//     int height = get_screen_height();
-//     for (int x = 0; x < width; x++) {
-//         for (int y = 0; y < height; y++) {
-//             pix_to_bg(x, y, buff->pixels[x * buff->rows + y]);
-//         }
-//     }
-// }
-
-
 int get_screen_width() {
     if (!initialized) _update_winsize();
     return wind_width;
