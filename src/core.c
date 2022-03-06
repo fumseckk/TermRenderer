@@ -81,10 +81,14 @@ void _draw_buff() {
                 color_up = *(Color*)buffer2d_get(pixels, x, y);
                 color_down = *(Color*)buffer2d_get(pixels, x, y+1);
 
-                if (color_eq(color_up, color_down)) { CHG_BG_COLOR_TO(color_up); printf(" "); }
-                // else if (color_down.a == 0) { CHG_BG_COLOR_TO(BLACK);     CHG_FG_COLOR_TO(color_up); printf("▀"); }
-                // else if (color_up.a == 0) { CHG_BG_COLOR_TO(BLACK);     CHG_FG_COLOR_TO(color_down); printf("▄"); }
-                else { CHG_BG_COLOR_TO(color_up); CHG_FG_COLOR_TO(color_down); printf("▄"); }
+                if (color_eq(color_up, color_down)) { 
+                    CHG_BG_COLOR_TO(color_up);
+                    printf(" ");
+                } else {
+                    CHG_BG_COLOR_TO(color_up);
+                    CHG_FG_COLOR_TO(color_down);
+                    printf("▄");
+                }
 
                 buffer2d_set(modified, x, y / 2, &FALSE);
             }
