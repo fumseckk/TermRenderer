@@ -157,7 +157,7 @@ void _init_window() {
 
 
 void _leave_window() {
-    FATAL_ERROR(tcsetattr(STDIN, 0, &term_settings) < 0, "[CNSR] Could not set config for stdin");
+    FATAL_ERROR(tcsetattr(STDIN, 0, &term_settings) < 0, "Could not set config for stdin");
     _free_buff();
     fflush(stdout);
     initialized = false;
