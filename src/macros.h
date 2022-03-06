@@ -46,31 +46,4 @@
 #define SAVE_CUR_POS()    printf(ESC "7");
 #define RESTORE_CUR_POS() printf(ESC "8");
 
-
-#define SLEEP() (usleep((useconds_t) 1000000/FPS);)
-
-
-#define FATAL_ERROR(cond, error_str) ({        \
-    if (cond) {                                    \
-        printf("FATAL_ERROR: %s\n", error_str);\
-        exit(EXIT_FAILURE);                        \
-    }                                              \
-})
-
-
-#ifndef NDEBUG    
-#define LOG(fmt, ...)
-#define OPEN_LOGS_FILE()
-#define CLOSE_LOGS_FILE()
-
-#else
-#define OPEN_LOGS_FILE()  FILE* _logs = fopen("logs.txt", "a");
-#define CLOSE_LOGS_FILE() fclose(_logs);
-#define LOG(fmt, ...) ({ \
-    FILE* logs = fopen("logs.txt", "a");\
-    fprintf(logs, fmt, __VA_ARGS__);\
-    fclose(logs);\
-})
-#endif
-
 #endif // MACROS_H

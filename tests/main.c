@@ -1,58 +1,79 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+
+#include "../headers/debug.h"
 #include "../headers/renderer.h"
 #include "../src/macros.h"
+
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
 
 
+void loop(double delta);
+
+
 int main() {
-    init_window();
+    init(&loop);
 
     int width =  get_screen_width();
     int height = get_screen_height();
 
     draw_circle(width/2+30, height/2+30, 40, BLUE);
-
     // set_bg_to_current();
-    
-    Color color = GOLD;
-    int rad = 0;
-    for (int i = 1; i<width; i++) {
-            color.r = MIN(color.r+1, 255);
-            color.g = MAX(color.g-1, 0);
-            color.b = MIN(color.b+1, 255);
-            rad++;
-            draw_circle_boundary(i, i, rad, color);
-            end_drawing();
-            usleep(15000);
-            remove_circle_boundary(i, i, rad);
-    }
 
-    float angle;
-    int r = 30;
-    for (int i = 0; i<=360; i++) {
-        begin_drawing();
+    start();
+    return 0;
+}
+
+
+Color color = GOLD;
+int i = 0;
+int r = 30;
+
+int state = 0;
+
+
+void loop(double delta) {
+    int width =  get_screen_width();
+    int height = get_screen_height();
+
+    // should be implemented using other functions etc... but as an example it is fine
+    switch (state) {
+    case 0:
+        set_framerate(16.5);
+
+        remove_circle_boundary(i+1, i+1, i);
+
+        color.r = MIN(color.r+1, 255);
+        color.g = MAX(color.g-1, 0);
+        color.b = MIN(color.b+1, 255);
+        i++;
+
+        draw_circle_boundary(i+1, i+1, i, color);
+
+        if (i - 1 > width) {
+            state++;
+            i = 0;
+        }
+        break;
+    case 1:
+        set_framerate(7);
         for (int x = width/2-r; x < width/2-r + 2*r+1; x++) {
             for (int y = height/2-r; y < height/2-r + 2*r+1; y++) {
                 remove_point(x, y);
             }
         }
-        // draw_rect(width/2 - r, height/2 - r, 2*r+1, 2*r+1, BLACK);
 
-        width = get_screen_width();
-        height = get_screen_height();
+        float angle = (float) i * PI / 180.0;
 
-        angle = (float) i * PI / 180.0;
         draw_line(width/2, height/2, width/2 + (int) round(r * cos(angle)), height/2 + (int) round(r * sin(angle)), GREEN);
-        end_drawing();
+        i++;
 
-        usleep(5000);
+        if (i > 360) {
+            state++;
+        }
+        break;
     }
-    end_drawing();
-
-    wait_and_leave_window();
-    return 0;
 }

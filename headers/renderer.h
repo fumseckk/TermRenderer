@@ -20,9 +20,9 @@
 
 
 typedef struct _color {
-    unsigned int r;
-    unsigned int g;
-    unsigned int b;
+    int r;
+    int g;
+    int b;
 } Color;
 
 // Les coordonnées sont 0-indexed
@@ -56,45 +56,52 @@ typedef struct _color {
 #define MAGENTA    (Color){ 255, 0, 255 }          // Magenta
 
 
+// initializes the program
+void init(void loop_function(double));
+void start();
 
 
-void init_window();
-void leave_window();
+// void init_window();
+// void leave_window();
 void wait_and_leave_window();
-void begin_drawing();
-void end_drawing();
+// void begin_drawing();
+// void end_drawing();
 
-unsigned int get_screen_width();
-unsigned int get_screen_height();
+int get_screen_width();
+int get_screen_height();
 
-void draw_point(unsigned int x, unsigned int y, Color color);
-void draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, Color color);
+void draw_point(int x, int y, Color color);
+void draw_line(int x0, int y0, int x1, int y1, Color color);
 
-void draw_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color);
-void draw_rect_boundary(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color);
+void draw_rect(int x, int y, int width, int height, Color color);
+void draw_rect_boundary(int x, int y, int width, int height, Color color);
 
 void draw_ellipse(int x0, int y0, int width, int height, Color color);
 void draw_ellipse_boundary(int x0, int y0, int width, int height, Color color);
 
 void draw_circle(int cx, int cy, int radius, Color color);
-void draw_circle_boundary(unsigned int cx, unsigned int cy, unsigned int radius, Color color);
+void draw_circle_boundary(int cx, int cy, int radius, Color color);
 
 
-void remove_point(unsigned int x, unsigned int y);
-void remove_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1);
+void remove_point(int x, int y);
+void remove_line(int x0, int y0, int x1, int y1);
 
-void remove_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
-void remove_rect_boundary(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+void remove_rect(int x, int y, int width, int height);
+void remove_rect_boundary(int x, int y, int width, int height);
 
 void remove_ellipse(int x0, int y0, int width, int height);
 void remove_ellipse_boundary(int x0, int y0, int width, int height);
 
 void remove_circle(int cx, int cy, int radius);
-void remove_circle_boundary(unsigned int cx, unsigned int cy, unsigned int radius);
+void remove_circle_boundary(int cx, int cy, int radius);
 
 
 void set_bg_to_color(Color color);
 void set_bg_to_current();
+
+
+void set_framerate(double framerate);
+double get_current_framerate();
 
 // void draw_circle();
 // void draw_ellipse();

@@ -2,32 +2,30 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "macros.h"
-#include "private_headers.h"
-#include "../headers/renderer.h"
 
-extern Buffer* buff;
-extern struct winsize volatile WINSIZE;
+#include "macros.h"
+#include "../headers/renderer.h"
+#include "screen_buffer.h"
 
 
 // DRAWING SHAPES
 
-void draw_point(unsigned int x, unsigned int y, Color color) {
+void draw_point(int x, int y, Color color) {
     pix_to_buff(x, y, color);
 }
 
 
-void draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1, Color color) {
+void draw_line(int x0, int y0, int x1, int y1, Color color) {
     int dx, dy, sx, sy, err, e2;
 
-    dx =  abs (x1 - x0);
-    dy = -abs (y1 - y0);
+    dx =  abs(x1 - x0);
+    dy = -abs(y1 - y0);
     sy = y0 < y1 ? 1 : -1; 
     sx = x0 < x1 ? 1 : -1;
     
     err = dx + dy; // error value e_xy
 
-    for (;;){  // boucle infinie
+    while (1) {  // boucle infinie
         draw_point(x0, y0, color);
         if (x0 == x1 && y0 == y1) break;
 
@@ -45,7 +43,7 @@ void draw_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y
 }
 
 
-void draw_rect_boundary(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color) {
+void draw_rect_boundary(int x, int y, int width, int height, Color color) {
     for (int posx = x; posx < x + width;    posx++) draw_point(posx, y, color);
     for (int posx = x; posx < x + width;    posx++) draw_point(posx, y + height, color);
     for (int posy = y; posy < y + height;   posy++) draw_point(x, posy, color);
@@ -53,7 +51,7 @@ void draw_rect_boundary(unsigned int x, unsigned int y, unsigned int width, unsi
 }
 
 
-void draw_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int height, Color color) {
+void draw_rect(int x, int y, int width, int height, Color color) {
     for (int posx = x; posx < x + width; posx++) {
         for (int posy = y; posy < y + height; posy++) {
             draw_point(posx, posy, color);
@@ -63,18 +61,18 @@ void draw_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int 
 
 
 void draw_ellipse(int x0, int y0, int width, int height, Color color) {
-    int x1 = x0 + width;
-    int y1 = y0 + height;
-    int b1 = height & 1; // values of diameter 
-    long dx = 4*(1 - width)  * height * height;
-    long dy = 4*(b1 + 1) * width * width; // error increment
-    long err = dx + dy + b1*width*width;
+    int x1   = x0 + width;
+    int y1   = y0 + height;
+    int b1   = height & 1; // values of diameter 
+    long dx  = 4*(1 - width) * height * height;
+    long dy  = 4*(b1 + 1) * width * width; // error increment
+    long err = dx + dy + b1 * width * width;
     long e2; // error of 1.step
 
     if (x0 > x1) { x0 = x1; x1 += width; } // if called with swapped points
     if (y0 > y1) y0 = y1; // .. exchange them 
     y0 += (height + 1) / 2;
-    y1 = y0-b1;   // starting pixel
+    y1 = y0 - b1;   // starting pixel
     width *= 8 * width;
     b1 = 8 * height * height;
 
@@ -97,7 +95,6 @@ void draw_ellipse(int x0, int y0, int width, int height, Color color) {
     } while (x0 <= x1);
 
    while (y0-y1 < height) {  // too early stop of flat ellipses a=1
-    
        draw_point(x0-1, y0, color); // -> finish tip of ellipse
        draw_point(x1+1, y0++, color); 
        draw_point(x0-1, y1, color);
@@ -107,18 +104,18 @@ void draw_ellipse(int x0, int y0, int width, int height, Color color) {
 
 
 void draw_ellipse_boundary(int x0, int y0, int width, int height, Color color) {
-    int x1 = x0 + width;
-    int y1 = y0 + height;
-    int b1 = height & 1; // values of diameter 
-    long dx = 4*(1 - width)  * height * height;
-    long dy = 4*(b1 + 1) * width * width; // error increment
-    long err = dx + dy + b1*width*width;
+    int x1   = x0 + width;
+    int y1   = y0 + height;
+    int b1   = height & 1; // values of diameter 
+    long dx  = 4*(1 - width) * height * height;
+    long dy  = 4*(b1 + 1) * width * width; // error increment
+    long err = dx + dy + b1 * width * width;
     long e2; // error of 1.step
 
     if (x0 > x1) { x0 = x1; x1 += width; } // if called with swapped points
     if (y0 > y1) y0 = y1; // .. exchange them 
     y0 += (height + 1) / 2;
-    y1 = y0-b1;   // starting pixel
+    y1 = y0 - b1;   // starting pixel
     width *= 8 * width;
     b1 = 8 * height * height;
 
@@ -184,7 +181,7 @@ void draw_circle(int cx, int cy, int radius, Color color) {
 }
 
 
-void draw_circle_boundary(unsigned int cx, unsigned int cy, unsigned int radius, Color color) {
+void draw_circle_boundary(int cx, int cy, int radius, Color color) {
     if (!radius) return;
     int error = -radius;
     int x = radius;
@@ -221,22 +218,22 @@ void draw_circle_boundary(unsigned int cx, unsigned int cy, unsigned int radius,
 
 // REMOVING SHAPES
 
-void remove_point(unsigned int x, unsigned int y) {
+void remove_point(int x, int y) {
     remove_pix(x, y);
 }
 
 
-void remove_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int y1) {
+void remove_line(int x0, int y0, int x1, int y1) {
     int dx, dy, sx, sy, err, e2;
 
-    dx =  abs (x1 - x0);
-    dy = -abs (y1 - y0);
+    dx =  abs(x1 - x0);
+    dy = -abs(y1 - y0);
     sy = y0 < y1 ? 1 : -1; 
     sx = x0 < x1 ? 1 : -1;
     
     err = dx + dy; // error value e_xy
 
-    for (;;){  // boucle infinie
+    while (1) {  // boucle infinie
         remove_point(x0, y0);
         if (x0 == x1 && y0 == y1) break;
 
@@ -254,7 +251,7 @@ void remove_line(unsigned int x0, unsigned int y0, unsigned int x1, unsigned int
 }
 
 
-void remove_rect_boundary(unsigned int x, unsigned int y, unsigned int width, unsigned int height) {
+void remove_rect_boundary(int x, int y, int width, int height) {
     for (int posx = x; posx < x + width;    posx++) remove_point(posx, y);
     for (int posx = x; posx < x + width;    posx++) remove_point(posx, y + height);
     for (int posy = y; posy < y + height;   posy++) remove_point(x, posy);
@@ -262,7 +259,7 @@ void remove_rect_boundary(unsigned int x, unsigned int y, unsigned int width, un
 }
 
 
-void remove_rect(unsigned int x, unsigned int y, unsigned int width, unsigned int height) {
+void remove_rect(int x, int y, int width, int height) {
     for (int posx = x; posx < x + width; posx++) {
         for (int posy = y; posy < y + height; posy++) {
             remove_point(posx, posy);
@@ -272,18 +269,18 @@ void remove_rect(unsigned int x, unsigned int y, unsigned int width, unsigned in
 
 
 void remove_ellipse(int x0, int y0, int width, int height) {
-    int x1 = x0 + width;
-    int y1 = y0 + height;
-    int b1 = height & 1; // values of diameter 
-    long dx = 4*(1 - width)  * height * height;
-    long dy = 4*(b1 + 1) * width * width; // error increment
-    long err = dx + dy + b1*width*width;
+    int x1   = x0 + width;
+    int y1   = y0 + height;
+    int b1   = height & 1; // values of diameter 
+    long dx  = 4*(1 - width) * height * height;
+    long dy  = 4*(b1 + 1) * width * width; // error increment
+    long err = dx + dy + b1 * width * width;
     long e2; // error of 1.step
 
     if (x0 > x1) { x0 = x1; x1 += width; } // if called with swapped points
     if (y0 > y1) y0 = y1; // .. exchange them 
     y0 += (height + 1) / 2;
-    y1 = y0-b1;   // starting pixel
+    y1 = y0 - b1;   // starting pixel
     width *= 8 * width;
     b1 = 8 * height * height;
 
@@ -306,7 +303,6 @@ void remove_ellipse(int x0, int y0, int width, int height) {
     } while (x0 <= x1);
 
    while (y0-y1 < height) {  // too early stop of flat ellipses a=1
-    
        remove_point(x0-1, y0); // -> finish tip of ellipse
        remove_point(x1+1, y0++); 
        remove_point(x0-1, y1);
@@ -316,18 +312,18 @@ void remove_ellipse(int x0, int y0, int width, int height) {
 
 
 void remove_ellipse_boundary(int x0, int y0, int width, int height) {
-    int x1 = x0 + width;
-    int y1 = y0 + height;
-    int b1 = height & 1; // values of diameter 
-    long dx = 4*(1 - width)  * height * height;
-    long dy = 4*(b1 + 1) * width * width; // error increment
-    long err = dx + dy + b1*width*width;
+    int x1   = x0 + width;
+    int y1   = y0 + height;
+    int b1   = height & 1; // values of diameter 
+    long dx  = 4*(1 - width) * height * height;
+    long dy  = 4*(b1 + 1) * width * width; // error increment
+    long err = dx + dy + b1 * width * width;
     long e2; // error of 1.step
 
     if (x0 > x1) { x0 = x1; x1 += width; } // if called with swapped points
     if (y0 > y1) y0 = y1; // .. exchange them 
     y0 += (height + 1) / 2;
-    y1 = y0-b1;   // starting pixel
+    y1 = y0 - b1;   // starting pixel
     width *= 8 * width;
     b1 = 8 * height * height;
 
@@ -393,7 +389,7 @@ void remove_circle(int cx, int cy, int radius) {
 }
 
 
-void remove_circle_boundary(unsigned int cx, unsigned int cy, unsigned int radius) {
+void remove_circle_boundary(int cx, int cy, int radius) {
     if (!radius) return;
     int error = -radius;
     int x = radius;
