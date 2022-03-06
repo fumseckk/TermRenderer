@@ -16,7 +16,7 @@
 #include "servers/main_server.h"
 
 
-// --------- Global variables ---------
+// --------- Variables ---------
 
 
 static bool initialized = false;
@@ -36,7 +36,6 @@ static FILE* debout;
 // --------- Internal Functions ---------
 
 
-
 void _update_winsize() {
     const struct winsize WINSIZE;
     if (!initialized) {
@@ -49,7 +48,7 @@ void _update_winsize() {
         if (wind_width != WINSIZE.ws_col || wind_height != WINSIZE.ws_row * 2) {
             wind_width = WINSIZE.ws_col;
             wind_height = WINSIZE.ws_row * 2;
-            resize_buff();
+            _resize_buff();
         }
     }
 }
@@ -76,7 +75,7 @@ void _init_window() {
     FATAL_ERROR(tcsetattr(STDIN, 0, &term_settings) < 0, "Could not set terminal settings for stdin");
 
     _update_winsize();
-    alloc_buff();
+    _alloc_buff();
     initialized = true;
 
     // Signal handlers for resize and Ctrl+C 
@@ -88,13 +87,13 @@ void _init_window() {
     USE_ALT_BUFF();
     MOVE_CUR_HOME();
 
-    draw_buff();
+    _draw_buff();
 }
 
 
 void _leave_window() {
     FATAL_ERROR(tcsetattr(STDIN, 0, &term_settings) < 0, "[CNSR] Could not set config for stdin");
-    free_buff();
+    _free_buff();
     fflush(stdout);
     initialized = false;
     CLEAR_SCREEN();
@@ -110,7 +109,7 @@ void _begin_drawing() {
 
 
 void _end_drawing() {
-    draw_buff();
+    _draw_buff();
     fflush(stdout);
 }
 

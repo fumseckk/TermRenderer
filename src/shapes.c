@@ -11,7 +11,7 @@
 // DRAWING SHAPES
 
 void draw_point(int x, int y, Color color) {
-    pix_to_buff(x, y, color);
+    _pix_to_buff(x, y, color);
 }
 
 
@@ -219,7 +219,7 @@ void draw_circle_boundary(int cx, int cy, int radius, Color color) {
 // REMOVING SHAPES
 
 void remove_point(int x, int y) {
-    remove_pix(x, y);
+    _remove_pix(x, y);
 }
 
 

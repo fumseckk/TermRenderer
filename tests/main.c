@@ -21,7 +21,7 @@ int main() {
     int height = get_screen_height();
 
     draw_circle(width/2+30, height/2+30, 40, BLUE);
-    // set_bg_to_current();
+    set_bg_to_current();
 
     start();
     return 0;

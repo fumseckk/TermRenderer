@@ -13,7 +13,10 @@
 Buffer* buff;
 
 
-void alloc_buff() {
+// --------- Internal Functions ---------
+
+
+void _alloc_buff() {
     buff = malloc(sizeof(Buffer));
 
     buff->width  = get_screen_width();
@@ -27,7 +30,7 @@ void alloc_buff() {
 }
 
 
-void resize_buff() {
+void _resize_buff() {
     buff->width  = get_screen_width();
     buff->height = get_screen_height();
 
@@ -37,7 +40,7 @@ void resize_buff() {
 }
 
 
-void free_buff() {
+void _free_buff() {
     free(buff->pixels);
     free(buff->bg);
     free(buff->modified);
@@ -50,20 +53,20 @@ bool _check_pix_in_bound(unsigned int x, unsigned int y) {
 }
 
 
-void pix_to_buff(unsigned int x, unsigned int y, Color color) {
+void _pix_to_buff(unsigned int x, unsigned int y, Color color) {
     if (!_check_pix_in_bound(x, y)) return;
     buff->pixels[x * buff->height + y] = color;
     buff->modified[x * buff->height + y] = true;
 }
 
 
-void pix_to_bg(unsigned int x, unsigned int y, Color color) {
+void _pix_to_bg(unsigned int x, unsigned int y, Color color) {
     if (!_check_pix_in_bound(x, y)) return;
     buff->bg[x * buff->height + y] = color;
 }
 
 
-void remove_pix(unsigned int x, unsigned int y) {
+void _remove_pix(unsigned int x, unsigned int y) {
     if (!_check_pix_in_bound(x, y)) return;
     buff->pixels[x * buff->height + y] = buff->bg[x * buff->height + y];
     buff->modified[x * buff->height + y] = true;
@@ -86,7 +89,7 @@ bool _check_pix_modified(unsigned int x, unsigned int y) {
 }
 
 
-void draw_buff() {
+void _draw_buff() {
     Color color1;
     Color color2;
 

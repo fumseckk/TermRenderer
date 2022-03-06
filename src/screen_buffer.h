@@ -16,14 +16,14 @@ typedef struct _buffer {
 } Buffer;
 
 
-void alloc_buff();
-void resize_buff();
-void free_buff();
-void pix_to_buff(unsigned int x, unsigned int y, Color color);
-void pix_to_bg(unsigned int x, unsigned int y, Color color);
-void remove_pix(unsigned int x, unsigned int y);
-void draw_buff();
-void flush_buff();
+void _alloc_buff();
+void _resize_buff();
+void _free_buff();
+void _pix_to_buff(unsigned int x, unsigned int y, Color color);
+void _pix_to_bg(unsigned int x, unsigned int y, Color color);
+void _remove_pix(unsigned int x, unsigned int y);
+void _draw_buff();
+void _flush_buff();
 
 
 #endif // #ifndef SCREEN_BUFFER_H
