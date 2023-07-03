@@ -1,5 +1,6 @@
 .vscode/
-prjs/
 *.o
 bin/*
 research.md
+*.mp4
+*.mpv
