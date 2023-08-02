@@ -7,7 +7,7 @@ HDRS := $(wildcard ./*.h)
 default: all
 
 all: $(HDRS) $(SRCS)
-	$(CC) $(SRCS) -o video $(CFLAGS)
+	$(CC) $(SRCS) -o bin/video $(CFLAGS)
 
 clean:
 	-rm -f video
