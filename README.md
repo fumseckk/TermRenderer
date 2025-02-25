@@ -1,2 +1,2 @@
 # TermRenderer
-#### Render graphics, shapes, colors, all without leaving your terminal.
+Render graphics, shapes, colors, all within your terminal.
