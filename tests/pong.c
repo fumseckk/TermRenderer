@@ -13,9 +13,6 @@
 #define HEIGHT get_screen_height()
 
 
-// TODO: Manage input & ability to print scores. Maybe on exit?
-
-
 typedef struct _ball {
     int posx;
     int posy;
@@ -91,7 +88,15 @@ void draw() {
               PAD_WIDTH, PAD_HEIGHT);
     remove_rect(paddle2.posx - HALF_PAD_WIDTH, paddle2.posy - HALF_PAD_HEIGHT, 
               PAD_WIDTH, PAD_HEIGHT);
-
+    
+    static int change_dir = 0;
+    if (++change_dir % 4 == 0) {
+        change_dir = 0; 
+        paddle1.vel = rand_int(0, 2) * 2;
+        paddle2.vel = rand_int(0, 2) * 2;
+        if (rand_int(0, 2)) paddle1.vel *= -1;
+        if (rand_int(0, 2)) paddle2.vel *= -1;
+    }
 
     // Update the paddles' y pos
     if (paddle1.posy > HALF_PAD_HEIGHT && paddle1.posy < HEIGHT - HALF_PAD_HEIGHT)
