@@ -1,7 +1,7 @@
 # TermRenderer
 Render graphics, shapes, colors, all within your terminal.
 
-Demo of some projects done with the renderer:
+Please find demos of some examples below (GIFs may take some time to appear)
 
 #### 1. Simple Pong game
 ![Video showcase of a pong game in terminal](https://github.com/fumseckk/TermRenderer/blob/main/media/showcase_pong.GIF)
